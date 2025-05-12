@@ -603,6 +603,23 @@ app.get('/Q90', async (req, res) => {
     } catch (err) { res.status(500).json({ Error: err.message }); }
 });
 
+app.get('/tables-count', async (req, res) => {
+  try {
+    const tables = ['regions', 'countries', 'employees', 'job_history', 'jobs','departments','locations'];
+    const counts = {};
+
+    for (let table of tables) {
+      const result = await pool.query(`SELECT COUNT(*) FROM ${table}`);
+      counts[table] = result.rows[0].count;
+    }
+
+    res.json(counts);
+  } catch (error) {
+    console.error('Error fetching counts:', error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
 
 
 const PORT = process.env.PORT || 6005;
